@@ -1,0 +1,15 @@
+export const loginPageProps = {
+    title: "Přihlášení",
+    meta_content: "Přihlašovací formulář.",
+    form_title: "Přihlášení",
+    username: "Uživatelské jméno",
+    form_username: "username",
+    password: "Heslo",
+    form_password: "password",
+    form_button: "Přihlásit se",
+    form_link: "Nemáte zde účet?",
+    form_link_href: "/registrace",
+    form_link_text: "Registrace",
+    form_link_text_pass: "Zapomenuté heslo?",
+    form_link_href_pass: "/zapomenute-heslo",
+}         

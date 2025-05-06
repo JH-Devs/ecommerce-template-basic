@@ -1,5 +1,12 @@
-import Register from "./Register";
+import RegisterComponent from "./Register";
+import { registerPageProps } from "./registerPageProps";
 
 export default{
-    component: Register,
+    component: RegisterComponent,
+    title: 'Stránky/Registrace'
 }
+ export const Register = {
+    args: {
+        ...registerPageProps,
+    }
+ };

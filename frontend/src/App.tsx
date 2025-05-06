@@ -2,15 +2,17 @@ import { Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import Login from "./pages/Login/Login"; 
 import Register from "./pages/Register/Register";
+import { loginPageProps } from "./pages/Login/loginPageProps";
+import { registerPageProps } from "./pages/Register/registerPageProps";
 
 function App() {
 
   return (
-    <>
+<>
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/prihlaseni" element={<Login />} />
-      <Route path="/registrace" element={<Register />} />
+      <Route path="/prihlaseni" element={<Login {...loginPageProps} />} />
+      <Route path="/registrace" element={<Register {...registerPageProps} />} />
 
      {/* <Route path="/contact" element={<Contact />} />
       <Route path="/services" element={<Services />} />

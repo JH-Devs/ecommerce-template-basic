@@ -1,0 +1,25 @@
+/* global.css TODO: doladit styly a vyřešit aby se přepisovali */
+:root {
+  --primary-color: #3498db; /* Example primary color */
+  --secondary-color: #2ecc71; /* Example secondary color */
+  --link-color: rgb(187, 30, 56); /* Example link color */
+  --font-size-base: 16px; /* Base font size */
+  --font-size-large: 24px; /* Large font size */
+  --font-size-small: 12px; /* Small font size */
+}
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: #f0f0f0; 
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+  }
+  
+  p {
+    font-size: 16px;
+  }
+  
