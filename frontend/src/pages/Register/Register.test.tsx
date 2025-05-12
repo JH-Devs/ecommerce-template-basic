@@ -6,7 +6,7 @@ import { registerPageProps } from "./registerPageProps";
 describe('Registrace komponenta', () => {
   it('zobrazí nadpis Registrace', () => {
     render(
-      <BrowserRouter> {/* Obalíme komponentu Register do BrowserRouter */}
+      <BrowserRouter>
         <Register {...registerPageProps} />
       </BrowserRouter>
     );

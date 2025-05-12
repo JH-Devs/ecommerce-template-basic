@@ -6,7 +6,7 @@ import { loginPageProps } from "./loginPageProps";
 describe('Přihlášení component', () => {
   it('zobrazí nadpis Přihlášení', () => {
     render(
-      <BrowserRouter> {/* Obalíme komponentu Login do BrowserRouter */}
+      <BrowserRouter>
         <Login {...loginPageProps} />
       </BrowserRouter>
     );
