@@ -4,6 +4,9 @@ import Link from '@mui/joy/Link';
 import { FormControl, FormLabel, Input, Button } from "@mui/joy";
 import PeopleIcon from '@mui/icons-material/People';
 import LockIcon from '@mui/icons-material/Lock';
+import { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 type LoginProps = {
     title: string;
@@ -19,8 +22,7 @@ type LoginProps = {
     form_link_text: string;
     form_link_href_pass: string;
     form_link_text_pass: string;
-    
-  };
+};
 
 const CustomStack = styled(Stack)({
     minHeight: "100vh",
@@ -33,30 +35,89 @@ const CustomStack = styled(Stack)({
     alignItems: "center",
 });
 
+export default function Login({
+    title,
+    meta_content,
+    form_title,
+    username,
+    password,
+    form_username,
+    form_password,
+    form_button,
+    form_link,
+    form_link_href,
+    form_link_text,
+    form_link_href_pass,
+    form_link_text_pass,
+}: LoginProps) {
 
-export default function Login({ title, meta_content, form_title, username, form_username,  password, form_password, form_button, form_link, form_link_href, form_link_text, form_link_href_pass, form_link_text_pass }: LoginProps) {     
+    const [email, setEmail] = useState("");
+    const [pass, setPass] = useState("");
+    const navigate = useNavigate();
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        try {
+            const response = await axios.post("/api/prihlaseni", {
+                email,
+                password: pass,
+            });
+
+            const { token, user } = response.data;
+
+            // Uložení tokenu např. do localStorage
+            localStorage.setItem("auth_token", token);
+            localStorage.setItem("auth_user", JSON.stringify(user));
+
+            // Přesměrování podle role
+            if (user.role === "admin") {
+                navigate("/admin/dashboard");
+            } else {
+                navigate("/");
+            }
+        } catch (error) {
+            console.error("Login error:", error);
+        }
+    };
+
     return (
         <>
-        <Title>{title}</Title>
-        <Meta name="description" content={meta_content} />
+            <Title>{title}</Title>
+            <Meta name="description" content={meta_content} />
             <CustomStack>
                 <Box sx={{ padding: 2, borderRadius: 8, minWidth: 500, margin: "auto" }}>
-                    <Card sx={{ padding: 2}}>
+                    <Card sx={{ padding: 2 }}>
                         <Typography variant="h4" textAlign="center">{form_title}</Typography>
-                        <FormControl>
-                            <FormLabel sx={{ mt:2}}>{username}</FormLabel>
-                            <Input startDecorator={<PeopleIcon />} name={form_username} required/>
-                        </FormControl>
-                        <FormControl>
-                            <FormLabel sx={{ mt:2}}>{password}</FormLabel>
-                            <Input startDecorator={<LockIcon />} name={form_password} required/>
-                        </FormControl>
+                        <form onSubmit={handleSubmit}>
+                            <FormControl>
+                                <FormLabel sx={{ mt: 2 }}>{username}</FormLabel>
+                                <Input
+                                    startDecorator={<PeopleIcon />}
+                                    name={form_username}
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    required
+                                />
+                            </FormControl>
+                            <FormControl>
+                                <FormLabel sx={{ mt: 2 }}>{password}</FormLabel>
+                                <Input
+                                    startDecorator={<LockIcon />}
+                                    type="password"
+                                    name={form_password}
+                                    value={pass}
+                                    onChange={(e) => setPass(e.target.value)}
+                                    required
+                                />
+                            </FormControl>
                             <Stack spacing={2} sx={{ mt: 2 }}>
                                 <Button variant="soft" color="success" type="submit">{form_button}</Button>
                             </Stack>
-                        <Stack sx={{ p:2, textAlign: "center",}}>
-                        <Typography variant="subtitle1">{form_link} <Link href={form_link_href}>{form_link_text}</Link></Typography>
-                        <Typography variant="subtitle2"><Link href={form_link_href_pass}>{form_link_text_pass}</Link></Typography>
+                        </form>
+                        <Stack sx={{ p: 2, textAlign: "center" }}>
+                            <Typography variant="subtitle1">{form_link} <Link href={form_link_href}>{form_link_text}</Link></Typography>
+                            <Typography variant="subtitle2"><Link href={form_link_href_pass}>{form_link_text_pass}</Link></Typography>
                         </Stack>
                     </Card>
                 </Box>

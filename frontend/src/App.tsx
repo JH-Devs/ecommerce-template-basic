@@ -6,13 +6,12 @@ import { loginPageProps } from "./pages/Login/loginPageProps";
 import { registerPageProps } from "./pages/Register/registerPageProps";
 
 function App() {
-
   return (
 <>
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/prihlaseni" element={<Login {...loginPageProps} />} />
-      <Route path="/registrace" element={<Register {...registerPageProps} />} />
+    {  <Route path="/registrace" element={<Register {...registerPageProps} />} />}
 
      {/* <Route path="/contact" element={<Contact />} />
       <Route path="/services" element={<Services />} />

@@ -5,24 +5,23 @@ import { FormControl, FormLabel, Input, Stack, Button } from '@mui/joy';
 import PeopleIcon from '@mui/icons-material/People';
 import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
 import LockIcon from '@mui/icons-material/Lock';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 
 type RegisterProps = {
     title: string;
     meta_content: string;
     form_title: string;
     name: string;
-    form_name: string;
     email: string;
-    form_email: string;
     password: string;
-    form_password: string;
     re_password: string;
-    form_re_password: string;
     form_button: string;
     form_link: string;
     form_link_href: string;
     form_link_text: string;
-  };
+};
 
 const CustomStack = styled(Stack)({
     minHeight: "100vh",
@@ -35,37 +34,119 @@ const CustomStack = styled(Stack)({
     alignItems: "center",
 });
 
-export default function Register({ title, meta_content, form_title, name, form_name, email, form_email, password, form_password, re_password, form_re_password, form_button, form_link, form_link_href, form_link_text }: RegisterProps) {  
+export default function Register({
+    title,
+    meta_content,
+    form_title,
+    name,
+    email,
+    password,
+    re_password,
+    form_button,
+    form_link,
+    form_link_href,
+    form_link_text
+}: RegisterProps) {
+    const navigate = useNavigate();
+    const [formData, setFormData] = useState({
+        name: "",
+        email: "",
+        password: "",
+        password_confirmation: "",
+    });
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        try {
+            const response = await fetch('/api/registrace', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json', 
+                },
+                body: JSON.stringify(formData)
+            });
+
+            if (!response.ok) {
+                const err = await response.json();
+                alert('Chyba: ' + (err.message || 'Registrace se nezdařila'));
+                return;
+            }
+
+            const data = await response.json();
+            alert('Registrace úspěšná!');
+            localStorage.setItem('token', data.token);
+            navigate('/prihlaseni');
+        } catch (error) {
+            console.error('Chyba při registraci:', error);
+            alert('Došlo k chybě při odeslání požadavku.');
+        }
+    };
+
     return (
         <>
-        <Title>{title}</Title>
-        <Meta name="description" content={meta_content} />
+            <Title>{title}</Title>
+            <Meta name="description" content={meta_content} />
             <CustomStack>
                 <Box sx={{ padding: 2, borderRadius: 8, minWidth: 500, margin: "auto" }}>
-                    <Card sx={{ padding: 2}}>
+                    <Card sx={{ padding: 2 }}>
                         <Typography variant="h4" textAlign="center">{form_title}</Typography>
-                        <form method="post">
-                        <FormControl>
-                            <FormLabel sx={{ mt:2}}>{name}</FormLabel>
-                            <Input startDecorator={<PeopleIcon />} name={form_name} required/>
-                        </FormControl>
-                        <FormControl>
-                            <FormLabel sx={{ mt:2}}>{email}</FormLabel>
-                            <Input startDecorator={<AlternateEmailIcon />} name={form_email} required/>
-                        </FormControl>
-                        <FormControl>
-                            <FormLabel sx={{ mt:2}}>{password}</FormLabel>
-                            <Input startDecorator={<LockIcon />} name={form_password} required/>
-                        </FormControl>
-                        <FormControl>
-                            <FormLabel sx={{ mt:2}}>{re_password}</FormLabel>
-                            <Input startDecorator={<LockIcon />} name={form_re_password} required/>
-                        </FormControl>
+                        <form onSubmit={handleSubmit}>
+                            <FormControl>
+                                <FormLabel sx={{ mt: 2 }}>{name}</FormLabel>
+                                <Input
+                                    startDecorator={<PeopleIcon />}
+                                    name="name"
+                                    value={formData.name}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </FormControl>
+                            <FormControl>
+                                <FormLabel sx={{ mt: 2 }}>{email}</FormLabel>
+                                <Input
+                                    startDecorator={<AlternateEmailIcon />}
+                                    name="email"
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </FormControl>
+                            <FormControl>
+                                <FormLabel sx={{ mt: 2 }}>{password}</FormLabel>
+                                <Input
+                                    type="password"
+                                    startDecorator={<LockIcon />}
+                                    name="password"
+                                    value={formData.password}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </FormControl>
+                            <FormControl>
+                                <FormLabel sx={{ mt: 2 }}>{re_password}</FormLabel>
+                                <Input
+                                    type="password"
+                                    startDecorator={<LockIcon />}
+                                    name="password_confirmation"
+                                    value={formData.password_confirmation}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </FormControl>
                             <Stack spacing={2} sx={{ mt: 2 }}>
-                                <Button variant="soft" color="success" type="submit">{form_button}</Button>
+                                <Button variant="soft" color="success" type="submit">
+                                    {form_button}
+                                </Button>
                             </Stack>
                         </form>
-                        <Typography variant="subtitle1" sx={{ p:2, textAlign: "center",}}>{form_link} <Link href={form_link_href}>{form_link_text}</Link></Typography>
+                        <Typography variant="subtitle1" sx={{ p: 2, textAlign: "center" }}>
+                            {form_link} <Link href={form_link_href}>{form_link_text}</Link>
+                        </Typography>
                     </Card>
                 </Box>
             </CustomStack>
